@@ -6,5 +6,6 @@ const mainRouter = new Router()
 
 mainRouter.post('/planets', PlanetHandler.create)
 mainRouter.get('/planets', PlanetHandler.getAll)
+mainRouter.get('/planets/*', PlanetHandler.getById)
 
 module.exports = mainRouter

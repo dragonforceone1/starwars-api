@@ -39,6 +39,14 @@ class PlanetService {
             console.log('failed getting all planets')
         }
     }
+
+    static getById(_id) {
+        try {
+            return Planet.findOne({ _id })
+        } catch (error) {
+            console.log('failed getting planet by id')
+        }
+    }
 }
 
 module.exports = PlanetService

@@ -74,6 +74,37 @@ class PlanetHandler {
 
         return response.send(responseObject)
     }
+
+    static async getById(request, response) {
+        const responseObject = PlanetHandler.getDefaultOutput()
+
+        try {
+            const _id = PlanetHandler.getIdFromUrl(request.originalUrl)
+
+            responseObject.data = await PlanetService.getById(_id)
+            responseObject.message = 'Planet found'
+
+            response.status(200)
+        } catch (error) {
+            response.status(400)
+
+            console.log(error.message)
+
+            responseObject.message = 'Planet not found'
+        }
+
+        return response.send(responseObject)
+    }
+
+    static getIdFromUrl(originalUrl) {
+        const params = originalUrl.split('/')
+
+        if (params.length !== 3) {
+            throw new Error('Invalid url')
+        }
+
+        return params[2]
+    }
 }
 
 module.exports = PlanetHandler
