@@ -4,11 +4,11 @@ const Planet = require('../models/planet')
 
 class PlanetService {
     static async create(params) {
-        const { name, climate, ground } = params
+        const { name } = params
 
         const countFilmAppearances = await PlanetService.getPlanetMovieAppearances(name)
 
-        return Planet.insert(name, climate, ground, countFilmAppearances)
+        return Planet.insert({ ...params, countFilmAppearances })
     }
 
     static async getPlanetMovieAppearances(planetName) {

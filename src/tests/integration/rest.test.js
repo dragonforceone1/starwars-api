@@ -3,7 +3,7 @@ require('dotenv').config({ 'path': './env/.env.test' })
 const app = require('../../app')
 const request = require('supertest')
 
-const { mockPlanet } = require('../mock/planet')
+const { mockPlanet, mockPlanet2, mockPlanet3, } = require('../mock/planet')
 
 const { MongoMemoryServer } = require('mongodb-memory-server')
 const Planet = require('../../models/planet')
@@ -58,10 +58,10 @@ describe('POST', () => {
         })
 
         it(`Creating a planet - should return "Planet ${name} already exists"`, async () => {
-            await Planet.insert(name, climate, ground, countFilmAppearances)
+            await Planet.insert(mockPlanet)
 
             const { status, body } = await request(app).post('/planets')
-                .send({ name, climate, ground })
+                .send(mockPlanet)
 
             expect(status).toBe(400)
             expect(body.message).toBe(`Planet ${name} already exists`)
@@ -79,6 +79,35 @@ describe('POST', () => {
             expect(data.climate).toBe(climate)
             expect(data.ground).toBe(ground)
             expect(data.countFilmAppearances).toBe(countFilmAppearances)
+        })
+    })
+})
+
+describe('GET', () => {
+    beforeAll(async () => {
+        const mongodb = new MongoMemoryServer({ instance: { port: 27017 }, autoStart: false })
+
+        await mongodb.start()
+
+        try {
+            await Planet.collection.drop()
+
+            await Planet.insert(mockPlanet)
+            await Planet.insert(mockPlanet2)
+            await Planet.insert(mockPlanet3)
+
+        } catch (error) {
+            // Nothing to do
+        }
+    })
+
+    describe('Success Cases', () => {
+        it(`Get planet list - should return planets array`, async () => {
+            const { status, body: { message, data } } = await request(app).get('/planets')
+
+            expect(status).toBe(200)
+            expect(message).toBe('3 planets found')
+            expect(data.length).toBe(3)
         })
     })
 })
