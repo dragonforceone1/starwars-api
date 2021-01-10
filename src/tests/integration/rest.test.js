@@ -102,7 +102,20 @@ describe('GET ALL', () => {
 })
 
 describe('GET by ID', () => {
+    describe('Fail Cases', () => {
 
+        it('Get planet by invalid ID - should return "Planet not found"', async () => {
+            let { _id } = await Planet.insert(mockPlanet)
+            _id = _id.toString()
+
+            const { status, body: { message } } = await request(app).get(`/planets/d1kjsadas2`)
+
+            expect(status).toBe(400)
+            expect(message).toBe('Planet not found')
+        })
+
+
+    })
     describe('Success Cases', () => {
 
         it('Get planet by ID - should return a planet', async () => {
