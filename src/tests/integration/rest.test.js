@@ -140,16 +140,27 @@ describe('GET by ID', () => {
 })
 
 describe('DELETE', () => {
-    describe('Fail cases', () => {
+    describe('Fail case', () => {
 
         it('Should return - Planet not found', async () => {
-            let { _id } = await Planet.insert(mockPlanet)
-            _id = _id.toString()
-
-            const { status, body: { message } } = await request(app).delete(`/planets/aaaaaa`)
+            const { status, body: { message } } = await request(app).delete('/planets/aaaaaa')
 
             expect(status).toBe(400)
             expect(message).toBe('Planet not found')
+        })
+    })
+
+    describe('Success case', () => {
+        const { name } = mockPlanet
+
+        it(`Should return - Planet ${name} found`, async () => {
+            let { _id } = await Planet.insert(mockPlanet)
+            _id = _id.toString()
+
+            const { status, body: { message } } = await request(app).delete(`/planets/${_id}`)
+
+            expect(status).toBe(202)
+            expect(message).toBe(`Planet ${name} deleted`)
         })
     })
 })
