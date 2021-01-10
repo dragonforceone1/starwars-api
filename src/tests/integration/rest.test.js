@@ -10,11 +10,12 @@ const Planet = require('../../models/planet')
 
 jest.setTimeout(60000)
 
+const MONGO_DB = new MongoMemoryServer({ instance: { port: 27017 }, autoStart: false })
+
 describe('POST', () => {
-    const mongodb = new MongoMemoryServer({ instance: { port: 27017 }, autoStart: false })
 
     beforeAll(async () => {
-        await mongodb.start()
+        await MONGO_DB.start()
 
         try {
             await Planet.collection.drop()
@@ -83,39 +84,26 @@ describe('POST', () => {
     })
 })
 
-describe('GET', () => {
-    const mongodb = new MongoMemoryServer({ instance: { port: 27017 }, autoStart: false })
-    beforeAll(async () => {
-
-        await mongodb.start()
-
-        try {
-            await Planet.collection.drop()
+describe('GET ALL', () => {
+    describe('Success Cases', () => {
+        it(`Get planet list - should return planets array`, async () => {
+            try {
+                await Planet.collection.drop()
+            } catch (error) {
+                // nothing to
+            }
 
             await Planet.insert(mockPlanet)
             await Planet.insert(mockPlanet2)
             await Planet.insert(mockPlanet3)
 
-        } catch (error) {
-            // Nothing to do
-        }
-    })
-
-    afterAll(async () => {
-        try {
-            await Planet.collection.drop()
-        } catch (error) {
-            // Nothing to do
-        }
-    })
-
-    describe('Success Cases', () => {
-        it(`Get planet list - should return planets array`, async () => {
             const { status, body: { message, data } } = await request(app).get('/planets')
 
             expect(status).toBe(200)
             expect(message).toBe('Found 3 planet(s)')
             expect(data.length).toBe(3)
+
+            await Planet.collection.drop()
         })
     })
 })
