@@ -26,5 +26,15 @@ describe('Testing Endpoints', () => {
             expect(body.message).toBe('missing climate field on body')
         })
 
+        it('Creating a planet - should return "missing ground field on body"', async () => {
+            const { name, climate } = mockPlanet
+
+            const { status, body } = await request(app).post('/planets')
+                .send({ name, climate })
+
+            expect(status).toBe(400)
+            expect(body.message).toBe('missing ground field on body')
+        })
+
     })
 })
