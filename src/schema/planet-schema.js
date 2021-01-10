@@ -26,9 +26,5 @@ module.exports.PlanetSchema = new mongoose.Schema({
     updatedAt: {
         type: Date,
         default: DateService.moment().toDate()
-    },
-    deletedAt: {
-        type: Date,
-        default: null
     }
 })

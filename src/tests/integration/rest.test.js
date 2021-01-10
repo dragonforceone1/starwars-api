@@ -108,7 +108,7 @@ describe('GET by ID', () => {
             let { _id } = await Planet.insert(mockPlanet)
             _id = _id.toString()
 
-            const { status, body: { message } } = await request(app).get(`/planets/d1kjsadas2`)
+            const { status, body: { message } } = await request(app).get(`/planets/aaaaaa`)
 
             expect(status).toBe(400)
             expect(message).toBe('Planet not found')
@@ -135,6 +135,21 @@ describe('GET by ID', () => {
             expect(message).toBe('Planet found')
             expect(data._id).toBe(_id)
             expect(data.name).toBe(mockPlanet.name)
+        })
+    })
+})
+
+describe('DELETE', () => {
+    describe('Fail cases', () => {
+
+        it('Should return - Planet not found', async () => {
+            let { _id } = await Planet.insert(mockPlanet)
+            _id = _id.toString()
+
+            const { status, body: { message } } = await request(app).delete(`/planets/aaaaaa`)
+
+            expect(status).toBe(400)
+            expect(message).toBe('Planet not found')
         })
     })
 })
