@@ -123,6 +123,11 @@ class PlanetHandler {
                 throw new Error('Planet not found')
             }
 
+            await PlanetService.deleteById(_id)
+
+            responseObject.message = `Planet ${foundPlanet.name} deleted`
+
+            response.status(202)
         } catch (error) {
             response.status(400)
 
