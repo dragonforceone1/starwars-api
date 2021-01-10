@@ -12,26 +12,25 @@ jest.setTimeout(60000)
 
 const MONGO_DB = new MongoMemoryServer({ instance: { port: 27017 }, autoStart: false })
 
+beforeAll(async () => {
+    await MONGO_DB.start()
+
+    try {
+        await Planet.collection.drop()
+    } catch (error) {
+        // Nothing to do
+    }
+})
+
+afterEach(async () => {
+    try {
+        await Planet.collection.drop()
+    } catch (error) {
+        // Nothing to do
+    }
+})
+
 describe('POST', () => {
-
-    beforeAll(async () => {
-        await MONGO_DB.start()
-
-        try {
-            await Planet.collection.drop()
-        } catch (error) {
-            // Nothing to do
-        }
-    })
-
-    afterEach(async () => {
-        try {
-            await Planet.collection.drop()
-        } catch (error) {
-            // Nothing to do
-        }
-    })
-
     const { name, climate, ground, countFilmAppearances } = mockPlanet
 
     describe('Fail Cases', () => {
@@ -87,12 +86,6 @@ describe('POST', () => {
 describe('GET ALL', () => {
     describe('Success Cases', () => {
         it(`Get planet list - should return planets array`, async () => {
-            try {
-                await Planet.collection.drop()
-            } catch (error) {
-                // nothing to
-            }
-
             await Planet.insert(mockPlanet)
             await Planet.insert(mockPlanet2)
             await Planet.insert(mockPlanet3)
@@ -104,6 +97,23 @@ describe('GET ALL', () => {
             expect(data.length).toBe(3)
 
             await Planet.collection.drop()
+        })
+    })
+})
+
+describe('GET by ID', () => {
+
+    describe('Success Cases', () => {
+
+        it('Get planet by ID - should return a planet', async () => {
+            const { _id } = await Planet.insert(mockPlanet)
+
+            const { status, body: { message, data } } = await request(app).get(`/planets/${_id.toString()}`)
+
+            expect(status).toBe(200)
+            expect(message).toBe('Planet found')
+            expect(data._id).toBe(_id)
+            expect(data.name).toBe(mockPlanet.name)
         })
     })
 })
