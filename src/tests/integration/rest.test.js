@@ -106,9 +106,10 @@ describe('GET by ID', () => {
     describe('Success Cases', () => {
 
         it('Get planet by ID - should return a planet', async () => {
-            const { _id } = await Planet.insert(mockPlanet)
+            let { _id } = await Planet.insert(mockPlanet)
+            _id = _id.toString()
 
-            const { status, body: { message, data } } = await request(app).get(`/planets/${_id.toString()}`)
+            const { status, body: { message, data } } = await request(app).get(`/planets/${_id}`)
 
             expect(status).toBe(200)
             expect(message).toBe('Planet found')
