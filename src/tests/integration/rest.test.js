@@ -84,8 +84,8 @@ describe('POST', () => {
 })
 
 describe('GET', () => {
+    const mongodb = new MongoMemoryServer({ instance: { port: 27017 }, autoStart: false })
     beforeAll(async () => {
-        const mongodb = new MongoMemoryServer({ instance: { port: 27017 }, autoStart: false })
 
         await mongodb.start()
 
@@ -101,12 +101,20 @@ describe('GET', () => {
         }
     })
 
+    afterAll(async () => {
+        try {
+            await Planet.collection.drop()
+        } catch (error) {
+            // Nothing to do
+        }
+    })
+
     describe('Success Cases', () => {
         it(`Get planet list - should return planets array`, async () => {
             const { status, body: { message, data } } = await request(app).get('/planets')
 
             expect(status).toBe(200)
-            expect(message).toBe('3 planets found')
+            expect(message).toBe('Found 3 planet(s)')
             expect(data.length).toBe(3)
         })
     })

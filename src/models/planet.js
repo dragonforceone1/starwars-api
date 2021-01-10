@@ -16,4 +16,6 @@ Planet.insert = async params => {
     return new Planet({ name, climate, ground, countFilmAppearances }).save()
 }
 
+Planet.getAll = () => Planet.find()
+
 module.exports = Planet

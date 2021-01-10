@@ -31,6 +31,14 @@ class PlanetService {
 
         return filmAppearances
     }
+
+    static getAll() {
+        try {
+            return Planet.getAll()
+        } catch (error) {
+            console.log('failed getting all planets')
+        }
+    }
 }
 
 module.exports = PlanetService

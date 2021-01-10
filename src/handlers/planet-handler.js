@@ -2,13 +2,7 @@ const PlanetService = require('../services/planet-service')
 
 class PlanetHandler {
     static async create(request, response) {
-        const responseObject = {
-            message: '',
-            data: null,
-            meta: {
-                api_status: 'stable'
-            }
-        }
+        const responseObject = PlanetHandler.getDefaultOutput()
 
         try {
             const { body } = request
@@ -37,6 +31,16 @@ class PlanetHandler {
         return response.send(responseObject)
     }
 
+    static getDefaultOutput() {
+        return {
+            message: '',
+            data: null,
+            meta: {
+                api_status: 'stable'
+            }
+        }
+    }
+
     static verifyRequiredFields(body) {
         const { name, climate, ground } = body
 
@@ -49,6 +53,26 @@ class PlanetHandler {
         if (!field || field === null) {
             throw new Error(errorMessage)
         }
+    }
+
+    static async getAll(request, response) {
+        const responseObject = PlanetHandler.getDefaultOutput()
+
+        try {
+            responseObject.data = await PlanetService.getAll()
+            responseObject.message = `Found ${responseObject.data.length} planet(s)`
+
+            response.status(200)
+
+        } catch (error) {
+            response.status(400)
+
+            console.error(error.message)
+
+            responseObject.message = error.message
+        }
+
+        return response.send(responseObject)
     }
 }
 
