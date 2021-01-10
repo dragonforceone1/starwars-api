@@ -5,8 +5,7 @@ const PlanetHandler = require('../handlers/planet-handler')
 const mainRouter = new Router()
 
 mainRouter.post('/planets', PlanetHandler.create)
-mainRouter.get('/planets', PlanetHandler.getAll)
-mainRouter.get('/planets/*', PlanetHandler.getById)
 mainRouter.delete('/planets/*', PlanetHandler.deleteById)
+mainRouter.get('/planets', PlanetHandler.get)
 
 module.exports = mainRouter

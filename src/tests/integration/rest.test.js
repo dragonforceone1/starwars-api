@@ -108,7 +108,8 @@ describe('GET by ID', () => {
             let { _id } = await Planet.insert(mockPlanet)
             _id = _id.toString()
 
-            const { status, body: { message } } = await request(app).get(`/planets/aaaaaa`)
+            const { status, body: { message } } = await request(app).get('/planets')
+                .query({ id: 'aaaaaa' })
 
             expect(status).toBe(400)
             expect(message).toBe('Planet not found')
@@ -117,7 +118,8 @@ describe('GET by ID', () => {
         it('Get planet not in database - should return "Planet not found"', async () => {
             await Planet.insert(mockPlanet)
 
-            const { status, body: { message } } = await request(app).get(`/planets/${mockPlanet2._id}`)
+            const { status, body: { message } } = await request(app).get('/planets')
+                .query({ id: mockPlanet2._id })
 
             expect(status).toBe(400)
             expect(message).toBe('Planet not found')
@@ -129,7 +131,8 @@ describe('GET by ID', () => {
             let { _id } = await Planet.insert(mockPlanet)
             _id = _id.toString()
 
-            const { status, body: { message, data } } = await request(app).get(`/planets/${_id}`)
+            const { status, body: { message, data } } = await request(app).get('/planets')
+                .query({ id: _id })
 
             expect(status).toBe(200)
             expect(message).toBe('Planet found')

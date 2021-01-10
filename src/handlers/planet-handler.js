@@ -55,7 +55,24 @@ class PlanetHandler {
         }
     }
 
-    static async getAll(request, response) {
+    static async get(request, response) {
+        const queryMap = {
+            id: PlanetHandler.getById,
+            name: PlanetHandler.getByName
+        }
+
+        for (const key in request.query) {
+            const searchFunction = queryMap[key]
+
+            if (typeof searchFunction === 'function') {
+                return await searchFunction(request.query[key], response)
+            }
+        }
+
+        return await PlanetHandler.getAll(response)
+    }
+
+    static async getAll(response) {
         const responseObject = PlanetHandler.getDefaultOutput()
 
         try {
@@ -75,12 +92,10 @@ class PlanetHandler {
         return response.send(responseObject)
     }
 
-    static async getById(request, response) {
+    static async getById(_id, response) {
         const responseObject = PlanetHandler.getDefaultOutput()
 
         try {
-            const _id = PlanetHandler.getIdFromUrl(request.originalUrl)
-
             responseObject.data = await PlanetService.getById(_id)
 
             if (responseObject.data === null) {
@@ -101,21 +116,13 @@ class PlanetHandler {
         return response.send(responseObject)
     }
 
-    static getIdFromUrl(originalUrl) {
-        const params = originalUrl.split('/')
-
-        if (params.length !== 3) {
-            throw new Error('Invalid url')
-        }
-
-        return params[2]
-    }
+    static async getByName(request, response) {}
 
     static async deleteById(request, response) {
         const responseObject = PlanetHandler.getDefaultOutput()
 
         try {
-            const _id = PlanetHandler.getIdFromUrl(request.originalUrl)
+            const _id = request.params.id
 
             const foundPlanet = await PlanetService.getById(_id)
 
