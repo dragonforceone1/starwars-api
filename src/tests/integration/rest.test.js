@@ -5,10 +5,35 @@ const request = require('supertest')
 
 const { mockPlanet } = require('../mock/planet')
 
-describe('Testing Endpoints', () => {
-    jest.setTimeout(60000)
+const { MongoMemoryServer } = require('mongodb-memory-server')
+const Planet = require('../../models/planet')
 
-    describe('POST', () => {
+jest.setTimeout(60000)
+
+describe('POST', () => {
+    const mongodb = new MongoMemoryServer({ instance: { port: 27017 }, autoStart: false })
+
+    beforeAll(async () => {
+        await mongodb.start()
+
+        try {
+            await Planet.collection.drop()
+        } catch (error) {
+            // Nothing to do
+        }
+    })
+
+    afterEach(async () => {
+        try {
+            await Planet.collection.drop()
+        } catch (error) {
+            // Nothing to do
+        }
+    })
+
+    const { name, climate, ground, countFilmAppearances } = mockPlanet
+
+    describe('Fail Cases', () => {
         it('Creating a planet - should return "missing name field on body"', async () => {
             const { status, body } = await request(app).post('/planets')
 
@@ -17,8 +42,6 @@ describe('Testing Endpoints', () => {
         })
 
         it('Creating a planet - should return "missing climate field on body"', async () => {
-            const { name, ground } = mockPlanet
-
             const { status, body } = await request(app).post('/planets')
                 .send({ name, ground })
 
@@ -27,14 +50,25 @@ describe('Testing Endpoints', () => {
         })
 
         it('Creating a planet - should return "missing ground field on body"', async () => {
-            const { name, climate } = mockPlanet
-
             const { status, body } = await request(app).post('/planets')
                 .send({ name, climate })
 
             expect(status).toBe(400)
             expect(body.message).toBe('missing ground field on body')
         })
+    })
 
+    describe('Success Cases', () => {
+        it(`Creating a planet - should return "Planet ${name} created successfully"`, async () => {
+            const { status, body: { message, data } } = await request(app).post('/planets')
+                .send({ name, climate, ground })
+
+            expect(status).toBe(201)
+            expect(message).toBe(`Planet ${name} created successfully`)
+            expect(data.name).toBe(name)
+            expect(data.climate).toBe(climate)
+            expect(data.ground).toBe(ground)
+            expect(data.countFilmAppearances).toBe(countFilmAppearances)
+        })
     })
 })
