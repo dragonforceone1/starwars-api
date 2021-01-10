@@ -82,6 +82,11 @@ class PlanetHandler {
             const _id = PlanetHandler.getIdFromUrl(request.originalUrl)
 
             responseObject.data = await PlanetService.getById(_id)
+
+            if (responseObject.data === null) {
+                throw new Error('Planet not found')
+            }
+
             responseObject.message = 'Planet found'
 
             response.status(200)
