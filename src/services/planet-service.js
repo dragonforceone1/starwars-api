@@ -47,6 +47,14 @@ class PlanetService {
             console.log('failed getting planet by id')
         }
     }
+
+    static deleteById(_id) {
+        try {
+            return Planet.deleteOne({ _id })
+        } catch (error) {
+            console.log('failed deleting planet')
+        }
+    }
 }
 
 module.exports = PlanetService

@@ -110,6 +110,29 @@ class PlanetHandler {
 
         return params[2]
     }
+
+    static async deleteById(request, response) {
+        const responseObject = PlanetHandler.getDefaultOutput()
+
+        try {
+            const _id = PlanetHandler.getIdFromUrl(request.originalUrl)
+
+            const foundPlanet = await PlanetService.getById(_id)
+
+            if (foundPlanet === null) {
+                throw new Error('Planet not found')
+            }
+
+        } catch (error) {
+            response.status(400)
+
+            console.log(error.message)
+
+            responseObject.message = 'Planet not found'
+        }
+
+        return response.send(responseObject)
+    }
 }
 
 module.exports = PlanetHandler
