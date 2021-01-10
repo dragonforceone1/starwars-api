@@ -28,6 +28,7 @@ class PlanetHandler {
         const { name, climate, ground } = body
 
         PlanetHandler.verifyField(name, 'missing name field on body')
+        PlanetHandler.verifyField(climate, 'missing climate field on body')
     }
 
     static verifyField(field, errorMessage) {
