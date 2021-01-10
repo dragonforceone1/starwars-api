@@ -4,11 +4,11 @@ const connection = MongoDB.getOrCreateConnection()
 const { PlanetSchema } = require('../schema/planet-schema')
 const Planet = connection.model('planet', PlanetSchema, 'planets')
 
-Planet.insert = async (name, climate, ground, countFilmAppearances) => {
+Planet.insert = async (name, climate, ground, countFilmAppearances = 0) => {
     const foundPlanet = await Planet.findOne({ name })
 
     if (foundPlanet !== null) {
-        throw new Error('Planet already exists')
+        throw new Error(`Planet ${name} already exists`)
     }
 
     return new Planet({ name, climate, ground, countFilmAppearances }).save()

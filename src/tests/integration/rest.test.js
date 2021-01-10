@@ -56,6 +56,16 @@ describe('POST', () => {
             expect(status).toBe(400)
             expect(body.message).toBe('missing ground field on body')
         })
+
+        it(`Creating a planet - should return "Planet ${name} already exists"`, async () => {
+            await Planet.insert(name, climate, ground, countFilmAppearances)
+
+            const { status, body } = await request(app).post('/planets')
+                .send({ name, climate, ground })
+
+            expect(status).toBe(400)
+            expect(body.message).toBe(`Planet ${name} already exists`)
+        })
     })
 
     describe('Success Cases', () => {
