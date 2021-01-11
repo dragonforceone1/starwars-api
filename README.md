@@ -20,10 +20,10 @@ npm start
 npm test
 ```
 
-#### End Points
+# End Points
 
 ## Create planet
-# (POST) localhost:8001/planets
+### (POST) localhost:8001/planets
 
 body
 ```json
@@ -33,4 +33,4 @@ body
     "*ground": "<String> [Represent the planet's ground']"
 }
 ```
-* = required fields
+\* = required fields
