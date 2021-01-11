@@ -145,12 +145,27 @@ describe('GET by ID', () => {
 describe('GET by Name', () => {
     describe('Fail case', () => {
 
-        it('Should return planet not found', () => {
+        it('Should return planet not found', async () => {
             const { status, body: { message } } = await request(app).get('/planets')
                 .query({ name: 'abbccc' })
 
             expect(status).toBe(400)
             expect(message).toBe('Planet not found')
+        })
+    })
+
+    describe('Success case', () => {
+
+        it('Should return planet', async () => {
+            const { name, _id } = await Planet.insert(mockPlanet)
+
+            const { status, body: { message, data } } = await request(app).get('/planets')
+                .query({ name })
+
+            expect(status).toBe(200)
+            expect(data._id).toBe(_id.toString())
+            expect(data.name).toBe(name)
+            expect(message).toBe('Planet found')
         })
     })
 })
