@@ -55,7 +55,7 @@ class PlanetHandler {
         }
     }
 
-    static async get(request, response) {
+    static get(request, response) {
         const queryMap = {
             id: PlanetHandler.getById,
             name: PlanetHandler.getByName
@@ -65,11 +65,11 @@ class PlanetHandler {
             const searchFunction = queryMap[key]
 
             if (typeof searchFunction === 'function') {
-                return await searchFunction(request.query[key], response)
+                return searchFunction(request.query[key], response)
             }
         }
 
-        return await PlanetHandler.getAll(response)
+        return PlanetHandler.getAll(response)
     }
 
     static async getAll(response) {
