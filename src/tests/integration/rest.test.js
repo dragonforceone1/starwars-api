@@ -142,6 +142,19 @@ describe('GET by ID', () => {
     })
 })
 
+describe('GET by Name', () => {
+    describe('Fail case', () => {
+
+        it('Should return planet not found', () => {
+            const { status, body: { message } } = await request(app).get('/planets')
+                .query({ name: 'abbccc' })
+
+            expect(status).toBe(400)
+            expect(message).toBe('Planet not found')
+        })
+    })
+})
+
 describe('DELETE', () => {
     describe('Fail case', () => {
 
