@@ -23,7 +23,7 @@ npm test
 # End Points
 
 ## Create planet
-### (POST) localhost:8001/planets
+### * (POST) localhost:8001/planets
 
 body
 ```json
@@ -37,22 +37,33 @@ body
 
 ## Get planet
 
-### All Planets - (GET) localhost:8001/planets
+### * All Planets - (GET) localhost:8001/planets
 
-### By ID - (GET) localhost:8001/planets?id=5ffc7dbb07aaf877009c98da
+### * By ID - (GET) localhost:8001/planets?id=5ffc7dbb07aaf877009c98da
 
 queryParams
 ```json
 {
-    "id": "<String> [Represent the planet's _id (ObjectID) code]",
+    "id": "<String> [Represent the planet's _id (ObjectID) code]"
 }
 ```
 
-### By NAME - (GET) localhost:8001/planets?name=Kashyyyk
+### * By NAME - (GET) localhost:8001/planets?name=Kashyyyk
 
 queryParams
 ```json
 {
-    "name": "<String> [Represent the planet's name]",
+    "name": "<String> [Represent the planet's name]"
+}
+```
+
+## Delete planet
+
+### * (DELETE) localhost:8001/planets/:id
+
+path
+```json
+{
+    "id": "<String> [Represent the planet's _id (ObjectID) code]"
 }
 ```
