@@ -116,7 +116,29 @@ class PlanetHandler {
         return response.send(responseObject)
     }
 
-    static async getByName(request, response) {}
+    static async getByName(name, response) {
+        const responseObject = PlanetHandler.getDefaultOutput()
+
+        try {
+            responseObject.data = await PlanetService.getByName(name)
+
+            if (responseObject.data === null) {
+                throw new Error('Planet not found')
+            }
+
+            responseObject.message = 'Planet found'
+
+            response.status(200)
+        } catch (error) {
+            response.status(400)
+
+            console.log(error.message)
+
+            responseObject.message = 'Planet not found'
+        }
+
+        return response.send(responseObject)
+    }
 
     static async deleteById(request, response) {
         const responseObject = PlanetHandler.getDefaultOutput()

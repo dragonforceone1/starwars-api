@@ -48,6 +48,14 @@ class PlanetService {
         }
     }
 
+    static getByName(name) {
+        try {
+            return Planet.findOne({ name })
+        } catch (error) {
+            console.log('failed getting planet by name')
+        }
+    }
+
     static deleteById(_id) {
         try {
             return Planet.deleteOne({ _id })
